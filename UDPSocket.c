@@ -5,8 +5,6 @@
 
 #include "UDPSocket.h"
 
-
-
 UDPSocket::UDPSocket(char* ip, unsigned short port) {
 	mBuffer = new char[1000];
 	mSocketFD = new int;
@@ -26,7 +24,7 @@ void UDPSocket::bindSocket(char* ip, unsigned short port) {
 
    	//Assemble our binding data
    	bindAddr.sin_family = AF_INET;
-   	inet_pton(AF_INET, "127.0.0.1", &bindAddr.sin_addr);
+   	inet_pton(AF_INET, ip, &bindAddr.sin_addr);
    	bindAddr.sin_port = htons(port);
 
    	//Bind our socket
@@ -48,16 +46,6 @@ char* UDPSocket::listen() {
 }
 
 UDPSocket::~UDPSocket() {
-	printf("Hit destructor.\n");
 	delete mSocketFD;
 	delete [] mBuffer;
-}
-
-int main(int argc, char* argv[]) {
-	char ip[] = "127.0.0.1";
-	UDPSocket mySock(ip, 2500);
-	for (;;) {
-		printf("here\n");
-		printf("Message received %s\n", mySock.listen());
-	}
 }
