@@ -24,7 +24,7 @@ void UDPSocket::bindSocket(char* ip, unsigned short port) {
 
    	//Assemble our binding data
    	bindAddr.sin_family = AF_INET;
-   	inet_pton(AF_INET, ip, &bindAddr.sin_addr);
+   	
    	bindAddr.sin_port = htons(port);
 
    	//Bind our socket
@@ -49,9 +49,11 @@ void UDPSocket::send(char* toSend, int length) {
 	//sendto(*mSocket, toSend, length, 0, (struct sockaddr *) &cliAddr, sizeof(cliAddr));
 }
 
-struct sockaddr* getSockStruct(char* ip, unsigned short port) {
-	struct sockaddr* sockStruct = new struct sockaddr;
-	bzero(sockStruct, sizeof(struct sockaddr));
+struct sockaddr_in* getSockStruct(char* ip, unsigned short port) {
+	struct sockaddr_in* sockStruct = new struct sockaddr_in;
+	bzero(sockStruct, sizeof(*sockStruct));
+	sockStruct->sin_family = AF_INET;
+	inet_pton(AF_INET, ip, &(sockStruct->sin_addr));
 	return sockStruct;
 }
 

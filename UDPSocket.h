@@ -8,6 +8,6 @@ class UDPSocket {
 	protected:
 		char* mBuffer;
 		int* mSocketFD;
-		struct sockaddr* getSockStruct(char* ip, unsigned short port);
+		struct sockaddr_in* getSockStruct(char* ip, unsigned short port);
 		virtual void bindSocket(char* ip, unsigned short port);
 };
