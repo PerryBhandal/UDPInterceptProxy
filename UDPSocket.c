@@ -50,6 +50,7 @@ char* UDPSocket::listen() {
 UDPSocket::~UDPSocket() {
 	printf("Hit destructor.\n");
 	delete mSocketFD;
+	delete [] mBuffer;
 }
 
 int main(int argc, char* argv[]) {
