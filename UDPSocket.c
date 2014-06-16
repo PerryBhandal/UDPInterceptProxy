@@ -2,7 +2,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <arpa/inet.h>
-
+#include <string.h>
 #include "UDPSocket.h"
 
 UDPSocket::UDPSocket(char* ip, unsigned short port) {
@@ -43,6 +43,16 @@ char* UDPSocket::listen() {
 	len = sizeof(cliAddr);
 	n = recvfrom(*mSocketFD, mBuffer, 1000, 0, (struct sockaddr*) &cliAddr, &len);
 	return mBuffer;	
+}
+
+void UDPSocket::send(char* toSend, int length) {
+	//sendto(*mSocket, toSend, length, 0, (struct sockaddr *) &cliAddr, sizeof(cliAddr));
+}
+
+struct sockaddr* getSockStruct(char* ip, unsigned short port) {
+	struct sockaddr* sockStruct = new struct sockaddr;
+	bzero(sockStruct, sizeof(struct sockaddr));
+	return sockStruct;
 }
 
 UDPSocket::~UDPSocket() {
