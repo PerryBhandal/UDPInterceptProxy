@@ -14,5 +14,5 @@ void UDPProxy::initialize(char* srcIP, unsigned short port) {
 int main(int argc, char* argv[]) {
 	printf("start\n");
 	char ip[] = "127.0.0.1";
-	UDPProxy test(ip, 5200);
+	UDPProxy test(ip, 5220);
 }

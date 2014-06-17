@@ -6,13 +6,17 @@
 #include "UDPSocket.h"
 
 UDPSocket::UDPSocket(char* ip, unsigned short port) {
-	mCliAddr = mBindAddr = NULL;
 	mBuffer = new char[1000];
 	mSocketFD = new int;
 	bindSocket(ip, port);
 }
 
 void UDPSocket::bindSocket(char* ip, unsigned short port) {
+	struct sockaddr_in bindAddr;
+	bzero(&bindAddr, sizeof(bindAddr));
+	bindAddr.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &bindAddr.sin_addr);
+    bindAddr.sin_port = htons(port);
 
 	//Create our socket
 	*mSocketFD = socket(AF_INET, SOCK_DGRAM, 0);
@@ -22,20 +26,26 @@ void UDPSocket::bindSocket(char* ip, unsigned short port) {
     	//TODO: Add exit here.
    	}
 
-   	mBindAddr = getSockStruct(ip, port);
    	//Bind our socket
-   	if (bind(*mSocketFD, (struct sockaddr *) mBindAddr, sizeof(mBindAddr)) < 0) {
+   	if (bind(*mSocketFD, (struct sockaddr *) &bindAddr, sizeof(bindAddr)) < 0) {
    		fprintf(stderr, "Error while binding.");
    		//TODO: Add exit
    	}
+}
+
+char* UDPSocket::getBufferPtr() {
+	return mBuffer;
 }
 
 int UDPSocket::listen() {
 	int n;
 	socklen_t len;
 
-	len = sizeof(mCliAddr);
-	n = recvfrom(*mSocketFD, mBuffer, 1000, 0, (struct sockaddr*) mCliAddr, &len);
+	struct sockaddr_in cliAddr;
+	bzero(&cliAddr, sizeof(cliAddr));
+
+	len = sizeof(cliAddr);
+	n = recvfrom(*mSocketFD, mBuffer, 1000, 0, (struct sockaddr*) &cliAddr, &len);
 	return n;
 }
 
@@ -43,21 +53,7 @@ void UDPSocket::send(char* toSend, int length) {
 	//sendto(*mSocket, toSend, length, 0, (struct sockaddr *) &cliAddr, sizeof(cliAddr));
 }
 
-struct sockaddr_in* UDPSocket::getSockStruct(char* ip, unsigned short port) {
-	struct sockaddr_in* sockStruct = new struct sockaddr_in;
-	bzero(sockStruct, sizeof(*sockStruct));
-	sockStruct->sin_family = AF_INET;
-	inet_pton(AF_INET, ip, &(sockStruct->sin_addr));
-	return sockStruct;
-}
-
 UDPSocket::~UDPSocket() {
-	if (mCliAddr != NULL)
-		delete mCliAddr;
-
-	if (mBindAddr != NULL)
-		delete mBindAddr;
-
 	delete mSocketFD;
 	delete [] mBuffer;
 }
