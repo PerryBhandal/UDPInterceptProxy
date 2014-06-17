@@ -13,10 +13,7 @@ UDPSocket::UDPSocket(char* ip, unsigned short port) {
 
 void UDPSocket::bindSocket(char* ip, unsigned short port) {
 	struct sockaddr_in bindAddr;
-	bzero(&bindAddr, sizeof(bindAddr));
-	bindAddr.sin_family = AF_INET;
-    inet_pton(AF_INET, ip, &bindAddr.sin_addr);
-    bindAddr.sin_port = htons(port);
+	initSockAddrIn(&bindAddr, ip, port);
 
 	//Create our socket
 	*mSocketFD = socket(AF_INET, SOCK_DGRAM, 0);
@@ -47,6 +44,13 @@ int UDPSocket::listen() {
 	len = sizeof(cliAddr);
 	n = recvfrom(*mSocketFD, mBuffer, 1000, 0, (struct sockaddr*) &cliAddr, &len);
 	return n;
+}
+
+void UDPSocket::initSockAddrIn(struct sockaddr_in* structPtr, char* ip, unsigned short port) {
+	bzero(structPtr, sizeof(*structPtr));
+	structPtr->sin_family = AF_INET;
+	inet_pton(AF_INET, ip, &(structPtr->sin_addr));
+	structPtr->sin_port = htons(port);
 }
 
 void UDPSocket::send(char* toSend, int length) {

@@ -7,6 +7,7 @@ class UDPSocket {
 		~UDPSocket();
 
 	protected:
+		void initSockAddrIn(struct sockaddr_in* structPtr, char* ip, unsigned short port);
 		char* mBuffer;
 		int* mSocketFD;
 		virtual void bindSocket(char* ip, unsigned short port);
