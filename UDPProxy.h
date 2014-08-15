@@ -1,11 +1,11 @@
 class UDPSocket;
 
 class UDPProxy {
-	public:
-		UDPProxy(char* srcIP, unsigned short port);
-		void startProxy();
+    public:
+        UDPProxy(char* srcIP, unsigned short port);
+        void startProxy();
 
-	private:
-		UDPSocket* mSocket;
-		void initialize(char* srcIP, unsigned short port);
+    private:
+        UDPSocket* mSocket;
+        void initialize(char* srcIP, unsigned short port);
 };
